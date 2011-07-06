@@ -1,105 +1,20 @@
 <?php
 /**
- * @version		$Id: example.php 21097 2011-04-07 15:38:03Z dextercowley $
- * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
+ * Emerson Rocha Luiz { emerson@webdesign.eng.br - http://fititnt.org }
+ * Copyright (C) 2005 - 2011 Webdesign Assessoria em Tecnologia da Informacao.
+ * GPL3
  */
-
-// No direct access
 defined('_JEXEC') or die;
 
 jimport('joomla.plugin.plugin');
 
 /**
- * Example Content Plugin
+ * GetGitHub Content Plugin
  *
- * @package		Joomla.Plugin
- * @subpackage	Content.example
- * @since		1.5
+ * @since		1.6
  */
 class plgContentExample extends JPlugin
 {
-	/**
-	 * Example after delete method.
-	 *
-	 * @param	string	The context for the content passed to the plugin.
-	 * @param	object	The data relating to the content that was deleted.
-	 * @return	boolean
-	 * @since	1.6
-	 */
-	public function onContentAfterDelete($context, $data)
-	{
-		return true;
-	}
-
-	/**
-	 * Example after display content method
-	 *
-	 * Method is called by the view and the results are imploded and displayed in a placeholder
-	 *
-	 * @param	string		The context for the content passed to the plugin.
-	 * @param	object		The content object.  Note $article->text is also available
-	 * @param	object		The content params
-	 * @param	int			The 'page' number
-	 * @return	string
-	 * @since	1.6
-	 */
-	public function onContentAfterDisplay($context, &$article, &$params, $limitstart)
-	{
-		$app = JFactory::getApplication();
-
-		return '';
-	}
-
-	/**
-	 * Example after save content method
-	 * Article is passed by reference, but after the save, so no changes will be saved.
-	 * Method is called right after the content is saved
-	 *
-	 * @param	string		The context of the content passed to the plugin (added in 1.6)
-	 * @param	object		A JTableContent object
-	 * @param	bool		If the content is just about to be created
-	 * @since	1.6
-	 */
-	public function onContentAfterSave($context, &$article, $isNew)
-	{
-		$app = JFactory::getApplication();
-
-		return true;
-	}
-
-	/**
-	 * Example after display title method
-	 *
-	 * Method is called by the view and the results are imploded and displayed in a placeholder
-	 *
-	 * @param	string		The context for the content passed to the plugin.
-	 * @param	object		The content object.  Note $article->text is also available
-	 * @param	object		The content params
-	 * @param	int			The 'page' number
-	 * @return	string
-	 * @since	1.6
-	 */
-	public function onContentAfterTitle($context, &$article, &$params, $limitstart)
-	{
-		$app = JFactory::getApplication();
-
-		return '';
-	}
-
-	/**
-	 * Example before delete method.
-	 *
-	 * @param	string	The context for the content passed to the plugin.
-	 * @param	object	The data relating to the content that is to be deleted.
-	 * @return	boolean
-	 * @since	1.6
-	 */
-	public function onContentBeforeDelete($context, $data)
-	{
-		return true;
-	}
-
 	/**
 	 * Example before display content method
 	 *
@@ -115,58 +30,34 @@ class plgContentExample extends JPlugin
 	public function onContentBeforeDisplay($context, &$article, &$params, $limitstart)
 	{
 		$app = JFactory::getApplication();
+                
+                // simple performance check to determine whether bot should process further
+		if (strpos($article->text, 'github') === false) {
+			return true;
+		}
+                
+		// expression to search for
+		$regex		= '/{github\s+(.*?)}/i'; //@todo: change to real regex later
+		$matches	= array();
+
+		// find all instances of plugin and put in $matches
+		preg_match_all($regex, $article->text, $matches, PREG_SET_ORDER);
+
+		foreach ($matches as $match) {
+			// $match[0] is full pattern match, $match[1] is the position
+			$output = $this->_getGithubRawCode($match[1]);
+			// We should replace only first occurrence in order to allow positions with the same name to regenerate their content:
+			$article->text = preg_replace("|$match[0]|", $output, $article->text, 1);
+		}
+                
+                
 
 		return '';
 	}
-
-	/**
-	 * Example before save content method
-	 *
-	 * Method is called right before content is saved into the database.
-	 * Article object is passed by reference, so any changes will be saved!
-	 * NOTE:  Returning false will abort the save with an error.
-	 *You can set the error by calling $article->setError($message)
-	 *
-	 * @param	string		The context of the content passed to the plugin.
-	 * @param	object		A JTableContent object
-	 * @param	bool		If the content is just about to be created
-	 * @return	bool		If false, abort the save
-	 * @since	1.6
-	 */
-	public function onContentBeforeSave($context, &$article, $isNew)
-	{
-		$app = JFactory::getApplication();
-
-		return true;
-	}
-
-	/**
-	 * Example after delete method.
-	 *
-	 * @param	string	The context for the content passed to the plugin.
-	 * @param	array	A list of primary key ids of the content that has changed state.
-	 * @param	int		The value of the state that the content has been changed to.
-	 * @return	boolean
-	 * @since	1.6
-	 */
-	public function onContentChangeState($context, $pks, $value)
-	{
-		return true;
-	}
-
-	/**
-	 * Example prepare content method
-	 *
-	 * Method is called by the view
-	 *
-	 * @param	string	The context of the content being passed to the plugin.
-	 * @param	object	The content object.  Note $article->text is also available
-	 * @param	object	The content params
-	 * @param	int		The 'page' number
-	 * @since	1.6
-	 */
-	public function onContentPrepare($context, &$article, &$params, $limitstart)
-	{
-		$app = JFactory::getApplication();
-	}
+        
+        protected function _getGithubRawCode($url){
+            
+            
+            return $code;
+        }
 }
