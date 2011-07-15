@@ -7,18 +7,12 @@
 	<license>GPL3</license>
 	<authorEmail>emerson@webdesign.eng.br</authorEmail>
 	<authorUrl>http://fititnt.org</authorUrl>
-	<version>0.1</version>
-	<description>PLG_GETGITHUBCODE_XML_DESCRIPTION</description>
+	<version>0.2</version>
+	<description>PLG_GETGITHUBCODE_DESCRIPTION</description>
 
 	<files>
 		<filename plugin="getgithubcode">getgithubcode.php</filename>
 		<filename>index.html</filename>
-		<!--
-			if you want to install the language files in the plugin folder.
-			Create a "language" folder at the root of the pack i.e
-			language/en-GB/en-GB.plg_content_example.ini
-			language/en-GB/en-GB.plg_content_example.sys.ini
-		-->
 		<folder>language</folder>
 	</files>
 	<languages folder="language">
@@ -33,26 +27,22 @@
 		<fields name="params">
 
 			<fieldset name="basic">
-				<field name="field1" type="text"
-					description="Example field 1"
-					label="Example field 1"
+                                <field name="tagname" type="text"
+					description="PLG_GETGITHUBCODE_TAGSNAME_DESC"
+					label="PLG_GETGITHUBCODE_TAGSNAME_LABEL"
+                                        default="github"
+				/>
+				<field name="tagstart" type="text"
+					description="PLG_GETGITHUBCODE_TAGSTART_DESC"
+					label="PLG_GETGITHUBCODE_TAGSTART_LABEL"
+                                        default="&lt;pre&gt;"
+				/>
+                                <field name="tagend" type="text"
+					description="PLG_GETGITHUBCODE_TAGEND_DESC"
+					label="PLG_GETGITHUBCODE_TAGEND_LABEL"
+                                        default="&lt;/pre&gt;"
 				/>
 			</fieldset>
-
-			<fieldset name="advanced">
-				<field name="field2" type="text"
-					description="Example field 2"
-					label="Example field 2"
-				/>
-			</fieldset>
-
-			<fieldset name="example">
-				<field name="field3" type="text"
-					description="Example field 3"
-					label="Example field 3"
-				/>
-			</fieldset>
-
 		</fields>
 	</config>
 </extension>
