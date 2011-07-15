@@ -36,8 +36,10 @@ class plgContentGetgithubcode extends JPlugin
 			return true;
 		}
                 
-		// expression to search for
-		$regex		= '/{'.$tagname.'\s+(.*?)}/i'; //@todo: change to real regex later
+		// expression to search
+                // {github}https://github.com/example...{/github}
+                // @todo: rewrite to make able to ask start and end lines
+                $regex		= '~{'.$tagname.'}(.*?){/'.$tagname.'}~i'; 
 		$matches	= array();
 
 		// find all instances of plugin and put in $matches
@@ -49,18 +51,20 @@ class plgContentGetgithubcode extends JPlugin
 			// We should replace only first occurrence in order to allow positions with the same name to regenerate their content:
 			$article->text = preg_replace("|$match[0]|", $code, $article->text, 1);
 		}
-                //echo _getUrlContents('https://raw.github.com/fititnt/plg_getgithubcode/master/getgithubcode.php');
-                //str_replace('https://raw.github.com/fititnt/plg_getgithubcode/master/getgithubcode.php', _getUrlContents('https://raw.github.com/fititnt/plg_getgithubcode/master/getgithubcode.php'), $article->text);
-                //echo 'teste';
-		//$article->text = 'ronaldo';
-                //var_dump($article); die();
                 return '';
 	}
         
+        /* Function to get get and change the githubcode
+         * @author      Emerson Rocha Luiz
+         * @var         string          $url: the url to get. Must be RAW url!
+         * @var         int             $start: line to start to show
+         * @var         int             $end: last line to show
+         * @return      string          $github: the final github code to show
+         */
         
-        protected function _getGithubCode($url, $start = FALSE, $end = FALSE, $certificate = FALSE){
+        protected function _getGithubCode($url, $start = FALSE, $end = FALSE){
             //Get Page
-            $page = $this->_getUrlContents($url, $certificate);
+            $page = $this->_getUrlContents($url, FALSE);
             //Get only desired lines
             if($start !== FALSE || $end !== FALSE){
                 $page = $this->_getStringLines($page, $start, $end);
@@ -78,8 +82,7 @@ class plgContentGetgithubcode extends JPlugin
             $github = $tagstart . $github . $tagsend;
             
             return $github;
-        }
-        
+        }        
         
         /*
          * Return contents of url
