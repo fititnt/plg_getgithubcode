@@ -14,6 +14,14 @@ Author: Emerson Rocha Luiz - @fititnt - emerson@webdesign.eng.br
 * You can use more plugins to edit aparence of code by puttin this plugin before and, editing the start and end tags of generated code.
 * For now, this plugin does not have cache enabled. Think about to use Joomla Cache for avoid access all times the github to show your code.
 
+-------   @todo   -------
+* Handle better Win linebreaksl* Implement on regex take just some lines of file
+
 ------- Changelog -------
 
-2011-07-15: 0.2 beta
+2011-07-15: 0.2beta2
+- Fixed linebreaks problem. (@todo: need check on win and mac OSs)
+- Fixed parameters get
+
+2011-07-15: 0.2beta1
+- Changelog start

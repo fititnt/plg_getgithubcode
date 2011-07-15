@@ -65,6 +65,10 @@ class plgContentGetgithubcode extends JPlugin
         protected function _getGithubCode($url, $start = FALSE, $end = FALSE){
             //Get Page
             $page = $this->_getUrlContents($url, FALSE);
+            
+            //Convert linebreaks
+            $page = $this->_Unix2Dos($page);
+            
             //Get only desired lines
             if($start !== FALSE || $end !== FALSE){
                 $page = $this->_getStringLines($page, $start, $end);
@@ -73,13 +77,13 @@ class plgContentGetgithubcode extends JPlugin
             $github = htmlspecialchars($page);
             
             //Get start and end tags and apply
-            $tagstart = $this->get('tagstart', '<pre>');
+            $tagstart = $this->params->get('tagstart', '<pre>');
             $tagstart = str_replace('&lt;', '<', $tagstart);
             $tagstart = str_replace('&gt;', '>', $tagstart);
-            $tagsend = $this->get('tagend', '</pre>');
-            $tagsend = str_replace('&lt;', '<', $tagsend);
-            $tagsend = str_replace('&gt;', '>', $tagsend);
-            $github = $tagstart . $github . $tagsend;
+            $tagsend  = $this->params->get('tagend', '</pre>');
+            $tagsend  = str_replace('&lt;', '<', $tagsend);
+            $tagsend  = str_replace('&gt;', '>', $tagsend);
+            $github   = $tagstart . $github . $tagsend;
             
             return $github;
         }        
@@ -112,7 +116,7 @@ class plgContentGetgithubcode extends JPlugin
          */
         protected function _getStringLines($string, $start, $end){
 
-            $stringArray = explode("\n", $string);
+            $stringArray = explode(PHP_EOL, $string);
             $nLines = count($stringArray)-1;
 
             //Handle a few errors
@@ -122,8 +126,23 @@ class plgContentGetgithubcode extends JPlugin
 
             $result = '';
             for( $i=($start-1); $i<=$end ; $i++ ){
-                $result .= $stringArray[$i] . "\n";
+                $result .= $stringArray[$i] . PHP_EOL;
             }    
             return $result;    
+        }
+        
+        /* Convert unix linebreaks to windows line breaks
+         * @author      Emerson Rocha Luiz
+         * @var         string          $string: the string to edit
+         * @return      string          $newstring
+         */
+        protected function _Unix2Dos($string){
+            if (strpos($string, "\n") === false) {
+                //$newstring = false;
+                $newstring = $string;				
+            } else {
+                $newstring = str_replace("\n", "\r\n", $string); 				 
+            }
+            return $newstring;
         }
 }
