@@ -37,7 +37,7 @@ class plgContentGetgithubcode extends JPlugin
 		}
                 
 		// expression to search
-                // {github}https://github.com/example...{/github}
+                // {github}https://raw.github.com/example...{/github}
                 // @todo: rewrite to make able to ask start and end lines
                 $regex		= '~{'.$tagname.'}(.*?){/'.$tagname.'}~i'; 
 		$matches	= array();

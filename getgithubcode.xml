@@ -13,6 +13,7 @@
 	<files>
 		<filename plugin="getgithubcode">getgithubcode.php</filename>
 		<filename>index.html</filename>
+		<filename>readme.txt</filename>
 		<folder>language</folder>
 	</files>
 	<languages folder="language">
